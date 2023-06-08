@@ -41,7 +41,9 @@ class FlutterStatusbarcolorPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
             "getstatusbarcolor" -> {
                 var statusBarColor: Int = 0
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    statusBarColor = activity!!.window.statusBarColor
+                    activity?.run {
+                        statusBarColor = this.window.statusBarColor
+                    }
                 }
                 result.success(statusBarColor)
             }
@@ -50,12 +52,20 @@ class FlutterStatusbarcolorPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                 val animate: Boolean = call.argument("animate")!!
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     if (animate) {
-                        val colorAnim = ValueAnimator.ofArgb(activity!!.window.statusBarColor, statusBarColor)
-                        colorAnim.addUpdateListener { anim -> activity!!.window.statusBarColor = anim.animatedValue as Int }
-                        colorAnim.duration = 300
-                        colorAnim.start()
+                        activity?.run {
+                            val colorAnim = ValueAnimator.ofArgb(this.window.statusBarColor, statusBarColor)
+                            colorAnim.addUpdateListener { anim ->
+                                activity?.let {
+                                    it.window.statusBarColor = anim.animatedValue as Int
+                                }
+                            }
+                            colorAnim.duration = 300
+                            colorAnim.start()
+                        }
                     } else {
-                        activity!!.window.statusBarColor = statusBarColor
+                        activity?.run {
+                            this.window.statusBarColor = statusBarColor
+                        }
                     }
                 }
                 result.success(null)
@@ -63,10 +73,12 @@ class FlutterStatusbarcolorPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
             "setstatusbarwhiteforeground" -> {
                 val usewhiteforeground: Boolean = call.argument("whiteForeground")!!
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (usewhiteforeground) {
-                        activity!!.window.decorView.systemUiVisibility = activity!!.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                    } else {
-                        activity!!.window.decorView.systemUiVisibility = activity!!.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    activity?.run {
+                        if (usewhiteforeground) {
+                            this.window.decorView.systemUiVisibility = this.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                        } else {
+                            this.window.decorView.systemUiVisibility = this.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        }
                     }
                 }
                 result.success(null)
@@ -74,7 +86,9 @@ class FlutterStatusbarcolorPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
             "getnavigationbarcolor" -> {
                 var navigationBarColor: Int = 0
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    navigationBarColor = activity!!.window.navigationBarColor
+                    activity?.run {
+                        navigationBarColor = this.window.navigationBarColor
+                    }
                 }
                 result.success(navigationBarColor)
             }
@@ -83,23 +97,33 @@ class FlutterStatusbarcolorPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                 val animate: Boolean = call.argument("animate")!!
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     if (animate) {
-                        val colorAnim = ValueAnimator.ofArgb(activity!!.window.navigationBarColor, navigationBarColor)
-                        colorAnim.addUpdateListener { anim -> activity!!.window.navigationBarColor = anim.animatedValue as Int }
-                        colorAnim.setDuration(300)
-                        colorAnim.start()
+                        activity?.run {
+                            val colorAnim = ValueAnimator.ofArgb(this.window.navigationBarColor, navigationBarColor)
+                            colorAnim.addUpdateListener { anim ->
+                                activity?.let {
+                                    it.window.navigationBarColor = anim.animatedValue as Int
+                                }
+                            }
+                            colorAnim.setDuration(300)
+                            colorAnim.start()
+                        }
                     } else {
-                        activity!!.window.navigationBarColor = navigationBarColor
+                        activity?.run {
+                            this.window.navigationBarColor = navigationBarColor
+                        }
                     }
                 }
                 result.success(null)
             }
             "setnavigationbarwhiteforeground" -> {
-                val usewhiteforeground: Boolean = call.argument("whiteForeground")!!
+                val usewhiteforeground: Boolean = call.argument("whiteForeground")?:false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (usewhiteforeground) {
-                        activity!!.window.decorView.systemUiVisibility = activity!!.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-                    } else {
-                        activity!!.window.decorView.systemUiVisibility = activity!!.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                    activity?.run {
+                        if (usewhiteforeground) {
+                            this.window.decorView.systemUiVisibility = this.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+                        } else {
+                            this.window.decorView.systemUiVisibility = this.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                        }
                     }
                 }
                 result.success(null)
